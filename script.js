@@ -6,19 +6,30 @@ document.addEventListener('DOMContentLoaded', async function() {
 
     console.log('Попытка загрузки категорий с:', `${apiUrl}/tours/categories`);
     try {
-        const response = await fetch(`${apiUrl}/tours/categories`);
+        const response = await fetch(`${apiUrl}/tours/categories`, {
+            method: 'GET',
+            headers: {
+                'Accept': 'application/json'
+            }
+        });
         console.log('Ответ от /tours/categories:', response);
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
         const categories = await response.json();
         console.log('Категории:', categories);
+        if (!categories || categories.length === 0) {
+            console.warn('Категории пустые или не получены');
+            return;
+        }
         categories.forEach(category => {
+            console.log('Добавление категории:', category);
             const option = document.createElement('option');
             option.value = category;
             option.textContent = category;
             categoryFilter.appendChild(option);
         });
+        console.log('Содержимое categoryFilter:', categoryFilter.innerHTML);
     } catch (error) {
         console.error('Ошибка при загрузке категорий:', error.message);
     }
@@ -28,7 +39,12 @@ document.addEventListener('DOMContentLoaded', async function() {
         const category = categoryFilter.value;
         console.log('Попытка загрузки событий с:', `${apiUrl}/tours/dates?category=${encodeURIComponent(category)}`);
         try {
-            const response = await fetch(`${apiUrl}/tours/dates?category=${encodeURIComponent(category)}`);
+            const response = await fetch(`${apiUrl}/tours/dates?category=${encodeURIComponent(category)}`, {
+                method: 'GET',
+                headers: {
+                    'Accept': 'application/json'
+                }
+            });
             console.log('Ответ от /tours/dates:', response);
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
