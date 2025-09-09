@@ -2,12 +2,12 @@ document.addEventListener('DOMContentLoaded', async function() {
     const calendarEl = document.getElementById('calendar');
     const yearViewEl = document.getElementById('yearView');
     const categoryFilter = document.getElementById('categoryFilter');
-    // Используем API_URL из переменной окружения или глобальной переменной
-    const apiUrl = window.API_URL || 'https://your-api-url.com'; // Замените на реальный URL API
+    const apiUrl = 'https://inforestsbotapi.onrender.com'; // Убедись, что адрес точный
 
-    // Загружаем категории
+    console.log('Попытка загрузки категорий с:', `${apiUrl}/tours/categories`);
     try {
         const response = await fetch(`${apiUrl}/tours/categories`);
+        console.log('Ответ от /tours/categories:', response);
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
@@ -20,15 +20,16 @@ document.addEventListener('DOMContentLoaded', async function() {
             categoryFilter.appendChild(option);
         });
     } catch (error) {
-        console.error('Ошибка при загрузке категорий:', error);
+        console.error('Ошибка при загрузке категорий:', error.message);
     }
 
-    // Загружаем события
     let events = [];
     async function fetchEvents() {
         const category = categoryFilter.value;
+        console.log('Попытка загрузки событий с:', `${apiUrl}/tours/dates?category=${encodeURIComponent(category)}`);
         try {
             const response = await fetch(`${apiUrl}/tours/dates?category=${encodeURIComponent(category)}`);
+            console.log('Ответ от /tours/dates:', response);
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
@@ -36,12 +37,11 @@ document.addEventListener('DOMContentLoaded', async function() {
             console.log('События:', events);
             return events;
         } catch (error) {
-            console.error('Ошибка при загрузке событий:', error);
+            console.error('Ошибка при загрузке событий:', error.message);
             return [];
         }
     }
 
-    // Инициализация FullCalendar для месячного представления
     const calendar = new FullCalendar.Calendar(calendarEl, {
         initialView: 'dayGridMonth',
         events: async function(fetchInfo, successCallback, failureCallback) {
@@ -54,13 +54,6 @@ document.addEventListener('DOMContentLoaded', async function() {
             const price = info.event.extendedProps.price;
             const places = info.event.extendedProps.places;
             console.log('Выбрано событие:', { tourName, shift, price, places });
-            // Отправляем данные через Telegram WebApp
-            Telegram.WebApp.sendData(JSON.stringify({
-                tour_name: tourName,
-                shift: shift
-            }));
-            // Закрываем WebApp после выбора
-            Telegram.WebApp.close();
         },
         eventDidMount: function(info) {
             const category = info.event.extendedProps.category;
@@ -73,7 +66,6 @@ document.addEventListener('DOMContentLoaded', async function() {
     });
     calendar.render();
 
-    // Функция для создания годового представления
     async function renderYearView() {
         yearViewEl.innerHTML = '';
         const fetchedEvents = await fetchEvents();
@@ -102,13 +94,6 @@ document.addEventListener('DOMContentLoaded', async function() {
                         price: event.extendedProps.price,
                         places: event.extendedProps.places
                     });
-                    // Отправляем данные через Telegram WebApp
-                    Telegram.WebApp.sendData(JSON.stringify({
-                        tour_name: event.title,
-                        shift: event.extendedProps.shift
-                    }));
-                    // Закрываем WebApp после выбора
-                    Telegram.WebApp.close();
                 };
                 monthContainer.appendChild(eventEl);
             });
@@ -136,8 +121,4 @@ document.addEventListener('DOMContentLoaded', async function() {
             renderYearView();
         }
     };
-
-    // Показываем кнопку "Выбрать" в Telegram WebApp
-    Telegram.WebApp.MainButton.setText('Выбрать');
-    Telegram.WebApp.MainButton.show();
 });
