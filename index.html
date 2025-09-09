@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Календарь событий</title>
+    <link href="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="icon" href="favicon.ico">
+</head>
+<body>
+    <div>
+        <select id="categoryFilter" onchange="filterEvents()">
+            <option value="">Все категории</option>
+        </select>
+        <button onclick="switchView('dayGridMonth')">Месяц</button>
+        <button onclick="switchView('year')">Год</button>
+    </div>
+    <div id="calendar" style="display: block;"></div>
+    <div id="yearView" style="display: none;"></div>
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.js"></script>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <script src="config.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>

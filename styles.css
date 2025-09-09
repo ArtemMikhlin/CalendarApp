@@ -1,0 +1,53 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 20px;
+}
+
+#categoryFilter {
+    margin-bottom: 20px;
+    padding: 10px;
+    font-size: 16px;
+}
+
+#calendar {
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+#yearView {
+    max-width: 900px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+}
+
+.month-container {
+    border: 1px solid #ccc;
+    padding: 10px;
+    background-color: #f9f9f9;
+}
+
+.month-container h3 {
+    margin: 0 0 10px;
+    font-size: 16px;
+}
+
+.event {
+    background-color: #007bff;
+    color: white;
+    padding: 5px;
+    margin: 2px 0;
+    cursor: pointer;
+}
+
+.event.spлавы {
+    background-color: #28a745;
+}
+
+button {
+    padding: 10px 20px;
+    margin-right: 10px;
+    font-size: 16px;
+    cursor: pointer;
+}
